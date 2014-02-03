@@ -21,6 +21,7 @@
 				align: center;
 			}
 			div.growlUI { background: url('images/check48.png') no-repeat 10px 10px }
+			div.growlUI { font : bold 3opx tahoma}
 			
 			#scoreboard {
 				text-align: center;
@@ -84,17 +85,10 @@
 		</style>
 	</head>
 	<body onload='setup();'>
+	
 	<script>
 	
-	$.blockUI({ css: { 
-            border: 'none', 
-            padding: '15px', 
-            backgroundColor: '#000', 
-            '-webkit-border-radius': '10px', 
-            '-moz-border-radius': '10px', 
-            opacity: .5, 
-            color: '#fff' 
-        } }); 
+	
 	
 	
 	</script>
@@ -126,24 +120,117 @@
 		</div>
 	<script>
 	function fun(){
-	
+	paddleSpeed = 5 ;
 	ballSpeed = 2+Math.floor(Math.random()*2);
 	score1=score2=0;
 	document.getElementById("myScore").innerHTML = score1 ;
 		document.getElementById("cpuScore").innerHTML = score2 ;
 	resetBall(1);
+	Sounds.bg.repeat();
 	
 	}
-	 
+	
 	</script>
 		<div class="growlUI" style="display: none;">
             <h1>+1</h1>
-            <h2>Well Done !</h2>
+            <h2 ><sp id ="pu">Well Done !</sp></h2>
         </div>
 		<div class="growlUI1" style="display: none;">
             <h1>Concentrate Dude!</h1>
             
         </div>
+		<div class="growlUI1st" style="display: none;" id="kickoff">
+            <h1>Press Arrow Keys to Start </h1>
+            
+        </div>
+		
+		<div id="startMsg" style="display:none;" class="message"> 
+		<center>
+                <el style="font : bold 70px Tahoma ;color : red"> Ready ? </el><br>
+				<a class="b-close"><input type="button" id="yes" value="Play Now" onclick="set()"/> </a>
+                </center>
+            </div>
+		<script>
+		function set(){
+	createScene();
+draw();
+Sounds.bg.repeat();
+ballSpeed =0 ;
+
+$("body").on("keydown", kick);
+
+	$.blockUI({ 
+            message: $('div.growlUI1st'), 
+            fadeIn: 700, 
+            fadeOut: 700, 
+            timeout: 4000, 
+            showOverlay: false, 
+            centerY: false, 
+            css: { 
+                width: '350px', 
+                top: '300px', 
+                left: '500px', 
+                right: '', 
+                border: 'none', 
+                padding: '5px', 
+                backgroundColor: '#000', 
+                '-webkit-border-radius': '10px', 
+                '-moz-border-radius': '10px', 
+                opacity: .6, 
+                color: '#fff' 
+            } 
+        }); 
+	
+	start_interval();
+	
+	}
+	 function kick(){
+	 document.getElementById("kickoff").style.display = 'none';
+	
+	 ballSpeed = 2+Math.floor(Math.random()*2);
+	 $("body").off("keydown", null);
+	 }
+		</script>
+		<script>
+		var last_request;
+		function aj(){
+			console.log("start of aj");
+			 if(last_request){
+			 	console.log('last request not null');
+     last_request.abort();
+       }
+
+   last_request = $.ajax({                                      
+      url: 'http://192.168.43.1:4040',                  //the script to call to get data          
+      data: 'hi', 
+      type: 'GET',                       //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
+      dataType: 'json',                //data format      
+      success: function(data)          //on recieve of reply
+      {
+        console.log("response = "+ data.orientation) ;          //get name
+        
+		dir =  data.orientation
+		
+      },
+     error:function(){
+	 console.log("error");
+	 last_request = null ;
+	 
+	 }
+    }).done(function(response){ 
+    console.log("killing last request");      
+    
+    // set the last request to null so that you dont abort a completed request 
+    //(this might not be necessary)
+    last_request = null; 
+   });
+
+	
+	}
+	function start_interval(){
+	window.setInterval(aj,150) ;
+	}
+		</script>
 		
 	</body>
 </html>
