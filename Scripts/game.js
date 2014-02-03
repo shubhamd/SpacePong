@@ -7,7 +7,7 @@ function Sound(name) {
     this.audio.appendChild(source);
   }
    Sound.prototype.play = function() {
-    this.stop();
+   // this.stop();
     this.audio.play();
   };
    Sound.prototype.repeat = function() {
@@ -22,13 +22,15 @@ function Sound(name) {
   };
   var Sounds = {
     so: [
-      'ballpaddle','result'
+      'ballpaddle','result','ohh','bg','cheer','appl'
     ]
   };
    Sounds.so.forEach(function(sound) {
     Sounds[sound] = new Sound(sound);
   });
 var renderer, scene, camera, pointLight, spotLight;
+//power up 
+pu = 0 ; var dir  ;
 
 // field variables
 var fieldWidth = 400, fieldHeight = 200;
@@ -60,10 +62,18 @@ function setup()
 	score2 = 0;
 	
 	
-	createScene();
 	
 	
-	draw();
+	
+	
+	$('#startMsg').bPopup({
+		
+ 	modalClose : false,
+	    easing: 'easeOutBack', //uses jQuery easing plugin
+            speed: 600,
+            transition: 'slideDown'
+        });
+		
 }
 
 function createScene()
@@ -303,7 +313,9 @@ var map2 = THREE.ImageUtils.loadTexture(mapUrl);
 function draw()
 {	
 	// draw THREE.JS scene
+	
 	renderer.render(scene, camera);
+	
 	// loop draw function call
 	requestAnimationFrame(draw);
 	
@@ -323,6 +335,7 @@ function ballPhysics()
 		// CPU scores
 		score2++;
 		// update scoreboard HTML
+		Sounds.ohh.play();
 		$.blockUI({ 
             message: $('div.growlUI1'), 
             fadeIn: 700, 
@@ -358,6 +371,11 @@ function ballPhysics()
 		// Player scores
 		score1++;
 		// update scoreboard HTML
+		Sounds.cheer.play();
+		
+		
+		
+		
 		$.blockUI({ 
             message: $('div.growlUI'), 
             fadeIn: 700, 
@@ -380,6 +398,7 @@ function ballPhysics()
                 color: '#fff' 
             } 
         }); 
+		document.getElementById('pu').innerHTML = 'Well Done !' ;
 		document.getElementById("myScore").innerHTML = score1 ;
 		document.getElementById("cpuScore").innerHTML = score2 ;
 		// reset ball to center
@@ -445,7 +464,7 @@ function opponentPaddleMovement()
 function playerPaddleMovement()
 {
 	// move left
-	if (Key.isDown(Key.A))		
+	if (Key.isDown(Key.A) || Key.isDown(Key.LEFT) || dir == 'left' )		
 	{
 		if (paddle1.position.y < fieldHeight * 0.45)
 		{
@@ -458,7 +477,7 @@ function playerPaddleMovement()
 		}
 	}	
 	// move right
-	else if (Key.isDown(Key.D))
+	else if (Key.isDown(Key.D) || Key.isDown(Key.RIGHT) || dir== 'right')
 	{
 		// if paddle is not touching the side of table
 		// we move
@@ -580,9 +599,10 @@ function matchScoreCheck()
 	{
 		// stop the ball
 		ballSpeed = 0;
-		Sounds.result.play();
+		Sounds.appl.play();
+		Sounds.bg.stop();
 	$('#domMessage1').bPopup({
-		
+		modalClose : false,
 	    easing: 'easeOutBack', //uses jQuery easing plugin
             speed: 600,
             transition: 'slideDown'
@@ -596,12 +616,12 @@ function matchScoreCheck()
 	{
 		// stop the ball
 		ballSpeed = 0;
-		// write to the banner
-		//$.blockUI({ message: $('#domMessage2'), css: { width: '275px' } });
+		
 		Sounds.result.play();
+		Sounds.bg.stop();
 		$('#domMessage2').bPopup({
-		//onClose: function() { game.restart() },
-		modalClose : false,
+		
+ 	modalClose : false,
 	    easing: 'easeOutBack', //uses jQuery easing plugin
             speed: 600,
             transition: 'slideDown'
@@ -610,11 +630,8 @@ function matchScoreCheck()
 		
 		// make paddle bounce up and down
 		bounceTime++;
-		//paddle2.position.z = Math.sin(bounceTime * 0.1) * 10;
-		// enlarge and squish paddle to emulate joy
-		//paddle2.scale.z = 2 + Math.abs(Math.sin(bounceTime * 0.1)) * 10;
-		//paddle2.scale.y = 2 + Math.abs(Math.sin(bounceTime * 0.05)) * 10;
+		
 	}
 }
-	$.unblockUI();
+	
 	
