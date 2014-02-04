@@ -30,7 +30,7 @@ function Sound(name) {
   });
 var renderer, scene, camera, pointLight, spotLight;
 //power up 
-pu = 0 ; var dir  ;
+pu = 0 ; var dir, start ;
 
 // field variables
 var fieldWidth = 400, fieldHeight = 200;

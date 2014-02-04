@@ -140,24 +140,30 @@
             
         </div>
 		<div class="growlUI1st" style="display: none;" id="kickoff">
-            <h1>Press Arrow Keys to Start </h1>
+            <h1>Press "Start" button in Mobile app.</h1>
             
         </div>
 		
 		<div id="startMsg" style="display:none;" class="message"> 
 		<center>
-                <el style="font : bold 70px Tahoma ;color : red"> Ready ? </el><br>
-				<a class="b-close"><input type="button" id="yes" value="Play Now" onclick="set()"/> </a>
+                <el style="font : bold 70px Tahoma ;color : red"> Space Pong Super </el><br>
+				<h2>1. Download and install 'Ping Pong controller' Android app from the Email attachment.<br>
+				
+				<h2>2. Turn on Portable hotspot on your mobile and connect your Laptop to hotspot.
+				<h2>3. Open the app in your mobile and press 'PLAY NOW' .<br>
+				<a class="b-close"><input type="button" id="yes" value="PLAY NOW" onclick="set()"/> </a>
                 </center>
             </div>
 		<script>
+		var ctr = 0 ;
 		function set(){
 	createScene();
 draw();
 Sounds.bg.repeat();
 ballSpeed =0 ;
 
-$("body").on("keydown", kick);
+//$("body").on("keydown", kick);
+
 
 	$.blockUI({ 
             message: $('div.growlUI1st'), 
@@ -182,8 +188,13 @@ $("body").on("keydown", kick);
         }); 
 	
 	start_interval();
+	console.log("ctr is : "+ ctr );
 	
-	}
+	
+}
+    
+	
+	
 	 function kick(){
 	 document.getElementById("kickoff").style.display = 'none';
 	
@@ -194,31 +205,43 @@ $("body").on("keydown", kick);
 		<script>
 		var last_request;
 		function aj(){
-			console.log("start of aj");
+		if(ctr == 0 ){
+	
+	if(start === 'true'){
+	
+	ctr ++ ;
+	kick();
+	}
+	
+	
+	
+	}
+			//console.log("start of aj");
 			 if(last_request){
-			 	console.log('last request not null');
+			 	//console.log('last request not null');
      last_request.abort();
        }
 
    last_request = $.ajax({                                      
       url: 'http://192.168.43.1:4040',                  //the script to call to get data          
-      data: 'hi', 
+      data: '', 
       type: 'GET',                       //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
       dataType: 'json',                //data format      
       success: function(data)          //on recieve of reply
       {
-        console.log("response = "+ data.orientation) ;          //get name
+       // console.log("response = "+ data.orientation) ;          //get name
         
-		dir =  data.orientation
+		dir =  data.orientation;
+		start = data.gameStarted ; 
 		
       },
      error:function(){
-	 console.log("error");
+	// console.log("error");
 	 last_request = null ;
 	 
 	 }
     }).done(function(response){ 
-    console.log("killing last request");      
+    //console.log("killing last request");      
     
     // set the last request to null so that you dont abort a completed request 
     //(this might not be necessary)
