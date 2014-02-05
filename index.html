@@ -228,7 +228,7 @@ ballSpeed =0 ;
    last_request = $.ajax({                                      
       url: 'http://192.168.43.1:4040',                  //the script to call to get data          
       data: '', 
-      type: 'POST',                       //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
+      type: 'GET',                       //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
       dataType: 'json',                //data format      
       success: function(data)          //on recieve of reply
       {
